@@ -701,114 +701,120 @@
    <!-- ================= Change Password ================= -->
 <section id="password" class="page">
 
-    <div class="card-panel">
+    <div class="card-panel student-password-panel">
 
-        <div class="card-header">
-            <h5>
-                <i class="bi bi-key-fill me-2"></i>
-                Change Password
-            </h5>
+        <div class="card-header student-password-header">
+            <div>
+                <h5>
+                    <i class="bi bi-key-fill me-2"></i>
+                    Change Password
+                </h5>
+                <small>Use a strong password to keep your student account secure.</small>
+            </div>
+            <span class="badge bg-primary px-3 py-2">Security</span>
         </div>
 
         <div class="card-body">
 
-            <div class="row justify-content-center">
+            <div class="row g-4 align-items-stretch">
 
                 <div class="col-lg-7">
 
-                    <form>
+                    <form id="studentPasswordForm" class="student-password-form" novalidate>
 
                         <!-- Current Password -->
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">
-                                Current Password
-                            </label>
+                        <div class="student-password-field">
+                            <label class="form-label" for="currentPassword">Current Password</label>
 
-                            <div class="input-group">
+                            <div class="input-group student-password-input">
                                 <span class="input-group-text">
                                     <i class="bi bi-lock-fill"></i>
                                 </span>
 
-                                <input type="password" id="currentPassword" class="form-control">
+                                <input
+                                    type="password"
+                                    id="currentPassword"
+                                    class="form-control"
+                                    placeholder="Enter current password"
+                                    autocomplete="current-password">
 
-                                <button class="btn btn-outline-secondary"
-                                        type="button">
+                                <button
+                                    class="btn btn-outline-secondary password-toggle"
+                                    type="button"
+                                    data-target="currentPassword"
+                                    aria-label="Show current password">
                                     <i class="bi bi-eye"></i>
                                 </button>
                             </div>
+
+                            <div class="invalid-feedback" id="currentPasswordError"></div>
                         </div>
 
                         <!-- New Password -->
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">
-                                New Password
-                            </label>
+                        <div class="student-password-field">
+                            <label class="form-label" for="newPassword">New Password</label>
 
-                            <div class="input-group">
+                            <div class="input-group student-password-input">
                                 <span class="input-group-text">
                                     <i class="bi bi-shield-lock-fill"></i>
                                 </span>
 
-                          <input type="password" id="newPassword" class="form-control">
+                                <input
+                                    type="password"
+                                    id="newPassword"
+                                    class="form-control"
+                                    placeholder="Enter new password"
+                                    autocomplete="new-password">
 
-                                <button class="btn btn-outline-secondary"
-                                        type="button">
+                                <button
+                                    class="btn btn-outline-secondary password-toggle"
+                                    type="button"
+                                    data-target="newPassword"
+                                    aria-label="Show new password">
                                     <i class="bi bi-eye"></i>
                                 </button>
                             </div>
 
-                            <div class="mt-2">
-                                <div class="progress" style="height:6px;">
-                                    <div class="progress-bar bg-success"
-                                         style="width:70%">
-                                    </div>
+                            <div class="student-password-strength">
+                                <div class="progress">
+                                    <div id="passwordStrengthBar" class="progress-bar"></div>
                                 </div>
-
-                                <small class="text-success">
-                                    Strong Password
-                                </small>
+                                <small id="passwordStrengthText">Password strength</small>
                             </div>
+
+                            <div class="invalid-feedback" id="newPasswordError"></div>
                         </div>
 
                         <!-- Confirm Password -->
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold">
-                                Confirm New Password
-                            </label>
+                        <div class="student-password-field">
+                            <label class="form-label" for="confirmPassword">Confirm New Password</label>
 
-                            <div class="input-group">
+                            <div class="input-group student-password-input">
                                 <span class="input-group-text">
                                     <i class="bi bi-check-circle-fill"></i>
                                 </span>
 
-                                <input type="password" id="confirmPassword" class="form-control">
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    class="form-control"
+                                    placeholder="Confirm new password"
+                                    autocomplete="new-password">
 
-                                <button class="btn btn-outline-secondary"
-                                        type="button">
+                                <button
+                                    class="btn btn-outline-secondary password-toggle"
+                                    type="button"
+                                    data-target="confirmPassword"
+                                    aria-label="Show confirm password">
                                     <i class="bi bi-eye"></i>
                                 </button>
                             </div>
-                        </div>
 
-                        <!-- Password Tips -->
-                        <div class="alert alert-light border mb-4">
-
-                            <h6 class="fw-bold mb-2">
-                                <i class="bi bi-info-circle-fill text-primary me-2"></i>
-                                Password Requirements
-                            </h6>
-
-                            <ul class="mb-0 small">
-                                <li>Minimum 8 characters</li>
-                                <li>Include at least one uppercase letter</li>
-                                <li>Include one number</li>
-                                <li>Include one special character</li>
-                            </ul>
-
+                            <div class="invalid-feedback" id="confirmPasswordError"></div>
                         </div>
 
                         <!-- Buttons -->
-                        <div class="d-flex gap-2 justify-content-end">
+                        <div class="student-password-actions">
 
                             <button type="reset"
                                     class="btn btn-light">
@@ -823,8 +829,42 @@
 
                         </div>
 
+                        <div id="studentPasswordMessage" class="alert d-none mb-0"></div>
+
                     </form>
 
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="student-password-tips">
+                        <h6>
+                            <i class="bi bi-info-circle-fill text-primary me-2"></i>
+                            Password Requirements
+                        </h6>
+
+                        <ul>
+                            <li id="passwordRuleLength">
+                                <i class="bi bi-circle"></i>
+                                Minimum 8 characters
+                            </li>
+                            <li id="passwordRuleUpper">
+                                <i class="bi bi-circle"></i>
+                                At least one uppercase letter
+                            </li>
+                            <li id="passwordRuleLower">
+                                <i class="bi bi-circle"></i>
+                                At least one lowercase letter
+                            </li>
+                            <li id="passwordRuleNumber">
+                                <i class="bi bi-circle"></i>
+                                At least one number
+                            </li>
+                            <li id="passwordRuleSpecial">
+                                <i class="bi bi-circle"></i>
+                                At least one special character
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
             </div>

@@ -113,112 +113,194 @@ profileUpload?.addEventListener("change", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    // ===============================
-    // Show / Hide Password
-    // ===============================
-    const toggleButtons = document.querySelectorAll(".input-group button");
+    const passwordForm = document.getElementById("studentPasswordForm");
+    const currentPassword = document.getElementById("currentPassword");
+    const newPassword = document.getElementById("newPassword");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const passwordMessage = document.getElementById("studentPasswordMessage");
+    const strengthBar = document.getElementById("passwordStrengthBar");
+    const strengthText = document.getElementById("passwordStrengthText");
+    const passwordRules = {
+        length: document.getElementById("passwordRuleLength"),
+        upper: document.getElementById("passwordRuleUpper"),
+        lower: document.getElementById("passwordRuleLower"),
+        number: document.getElementById("passwordRuleNumber"),
+        special: document.getElementById("passwordRuleSpecial")
+    };
+    const passwordChecks = [
+        { key: "length", test: value => value.length >= 8 },
+        { key: "upper", test: value => /[A-Z]/.test(value) },
+        { key: "lower", test: value => /[a-z]/.test(value) },
+        { key: "number", test: value => /\d/.test(value) },
+        { key: "special", test: value => /[^A-Za-z0-9]/.test(value) }
+    ];
 
-    toggleButtons.forEach(button => {
+    function setPasswordError(input, errorId, message) {
+        const error = document.getElementById(errorId);
+        if(!input || !error) return;
 
-        button.addEventListener("click", function () {
+        input.classList.toggle("is-invalid", Boolean(message));
+        input.classList.toggle("is-valid", !message && input.value.trim().length > 0);
+        error.textContent = message;
+        error.classList.toggle("d-block", Boolean(message));
+    }
 
-            const input = this.parentElement.querySelector("input");
-            const icon = this.querySelector("i");
+    function getPasswordScore(value) {
+        return passwordChecks.filter(rule => rule.test(value)).length;
+    }
 
-            if (input.type === "password") {
-                input.type = "text";
-                icon.classList.remove("bi-eye");
-                icon.classList.add("bi-eye-slash");
-            } else {
-                input.type = "password";
-                icon.classList.remove("bi-eye-slash");
-                icon.classList.add("bi-eye");
+    function updatePasswordRules(value) {
+        passwordChecks.forEach(rule => {
+            const ruleItem = passwordRules[rule.key];
+            if(!ruleItem) return;
+
+            const isValid = rule.test(value);
+            const icon = ruleItem.querySelector("i");
+
+            ruleItem.classList.toggle("valid", isValid);
+
+            if(icon){
+                icon.classList.toggle("bi-check-circle-fill", isValid);
+                icon.classList.toggle("bi-circle", !isValid);
             }
-
         });
+    }
 
-    });
+    function updatePasswordStrength(value) {
+        if(!strengthBar || !strengthText) return;
 
-    // ===============================
-    // Password Strength
-    // ===============================
-const newPassword = document.getElementById("newPassword");
-    const progressBar = document.querySelector("#password .progress-bar");
-    const strengthText = document.querySelector("#password .text-success");
+        const strengthMap = [
+            { width: "0%", className: "", text: "Password strength" },
+            { width: "20%", className: "bg-danger", text: "Very weak" },
+            { width: "40%", className: "bg-warning", text: "Weak" },
+            { width: "60%", className: "bg-info", text: "Good" },
+            { width: "80%", className: "bg-primary", text: "Strong" },
+            { width: "100%", className: "bg-success", text: "Very strong" }
+        ];
+        const score = getPasswordScore(value);
+        const strength = strengthMap[score];
 
-    newPassword?.addEventListener("input", function () {
+        strengthBar.className = `progress-bar ${strength.className}`.trim();
+        strengthBar.style.width = strength.width;
+        strengthText.textContent = strength.text;
+        strengthText.className = score >= 5 ? "text-success" : "text-muted";
+    }
 
-        const password = this.value;
+    function validateStudentPasswordForm(showCurrentError = true, showEmptyErrors = true) {
+        const currentValue = currentPassword?.value.trim() || "";
+        const newValue = newPassword?.value.trim() || "";
+        const confirmValue = confirmPassword?.value.trim() || "";
+        const isStrong = getPasswordScore(newValue) === passwordChecks.length;
 
-        let strength = 0;
-
-        if (password.length >= 8) strength++;
-        if (/[A-Z]/.test(password)) strength++;
-        if (/[0-9]/.test(password)) strength++;
-        if (/[^A-Za-z0-9]/.test(password)) strength++;
-
-        if(!progressBar || !strengthText) return;
-
-        progressBar.className = "progress-bar";
-
-        switch (strength) {
-
-            case 0:
-            case 1:
-                progressBar.style.width = "25%";
-                progressBar.classList.add("bg-danger");
-                strengthText.innerHTML = "Weak Password";
-                strengthText.className = "text-danger";
-                break;
-
-            case 2:
-                progressBar.style.width = "50%";
-                progressBar.classList.add("bg-warning");
-                strengthText.innerHTML = "Medium Password";
-                strengthText.className = "text-warning";
-                break;
-
-            case 3:
-                progressBar.style.width = "75%";
-                progressBar.classList.add("bg-info");
-                strengthText.innerHTML = "Good Password";
-                strengthText.className = "text-info";
-                break;
-
-            case 4:
-                progressBar.style.width = "100%";
-                progressBar.classList.add("bg-success");
-                strengthText.innerHTML = "Strong Password";
-                strengthText.className = "text-success";
-                break;
-
-            default:
-                progressBar.style.width = "0%";
-                strengthText.innerHTML = "";
+        if(showCurrentError){
+            setPasswordError(
+                currentPassword,
+                "currentPasswordError",
+                currentValue ? "" : "Current password is required."
+            );
         }
 
+        let newPasswordError = "";
+
+        if(!newValue && showEmptyErrors){
+            newPasswordError = "New password is required.";
+        } else if(newValue && !isStrong){
+            newPasswordError = "Password must match all requirements.";
+        } else if(currentValue && newValue === currentValue){
+            newPasswordError = "New password must be different from current password.";
+        }
+
+        let confirmPasswordError = "";
+
+        if(!confirmValue && showEmptyErrors){
+            confirmPasswordError = "Please confirm your new password.";
+        } else if(confirmValue && confirmValue !== newValue){
+            confirmPasswordError = "Confirm password does not match new password.";
+        }
+
+        setPasswordError(newPassword, "newPasswordError", newPasswordError);
+        setPasswordError(confirmPassword, "confirmPasswordError", confirmPasswordError);
+
+        return Boolean(currentValue) && !newPasswordError && !confirmPasswordError;
+    }
+
+    document.querySelectorAll(".password-toggle").forEach(button => {
+        button.addEventListener("click", function () {
+            const input = document.getElementById(this.dataset.target);
+            const icon = this.querySelector("i");
+            if(!input || !icon) return;
+
+            const isHidden = input.type === "password";
+            input.type = isHidden ? "text" : "password";
+            icon.classList.toggle("bi-eye-slash", isHidden);
+            icon.classList.toggle("bi-eye", !isHidden);
+        });
     });
 
-    // ===============================
-    // Confirm Password Validation
-    // ===============================
-    const confirmPassword = document.getElementById("confirmPassword");
+    newPassword?.addEventListener("input", function () {
+        updatePasswordRules(this.value);
+        updatePasswordStrength(this.value);
+        validateStudentPasswordForm(false, false);
+    });
+
+    currentPassword?.addEventListener("input", function () {
+        validateStudentPasswordForm(false, false);
+    });
 
     confirmPassword?.addEventListener("input", function () {
+        validateStudentPasswordForm(false, false);
+    });
 
-        if (this.value === "") {
-            this.classList.remove("is-valid", "is-invalid");
+    passwordForm?.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        if(passwordMessage){
+            passwordMessage.className = "alert d-none mb-0";
+            passwordMessage.textContent = "";
+        }
+
+        if(!validateStudentPasswordForm(true, true)){
+            if(passwordMessage){
+                passwordMessage.className = "alert alert-danger mb-0";
+                passwordMessage.textContent = "Please fix the highlighted password fields.";
+            }
             return;
         }
 
-        if (newPassword && this.value === newPassword.value) {
-            this.classList.remove("is-invalid");
-            this.classList.add("is-valid");
-        } else {
-            this.classList.remove("is-valid");
-            this.classList.add("is-invalid");
+        if(passwordMessage){
+            passwordMessage.className = "alert alert-success mb-0";
+            passwordMessage.textContent = "Password updated successfully.";
         }
 
+        [currentPassword, newPassword, confirmPassword].forEach(input => {
+            if(input) input.value = "";
+        });
+        updatePasswordRules("");
+        updatePasswordStrength("");
+        [currentPassword, newPassword, confirmPassword].forEach(input => {
+            input?.classList.remove("is-valid", "is-invalid");
+        });
     });
+
+    passwordForm?.addEventListener("reset", function () {
+        setTimeout(() => {
+            updatePasswordRules("");
+            updatePasswordStrength("");
+            [currentPassword, newPassword, confirmPassword].forEach(input => {
+                input?.classList.remove("is-valid", "is-invalid");
+            });
+            document.querySelectorAll("#password .invalid-feedback").forEach(error => {
+                error.textContent = "";
+                error.classList.remove("d-block");
+            });
+            if(passwordMessage){
+                passwordMessage.className = "alert d-none mb-0";
+                passwordMessage.textContent = "";
+            }
+        }, 0);
+    });
+
+    updatePasswordRules("");
+    updatePasswordStrength("");
 
 });
