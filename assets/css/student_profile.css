@@ -1,0 +1,109 @@
+.profile-card-modern{
+    border-radius:20px;
+    overflow:hidden;
+}
+
+.student-photo-card{
+    background:#0e062b;
+    border-radius:18px;
+    padding:25px;
+    text-align:center;
+    height:100%;
+    border:1px solid #edf2f7;
+}
+
+.student-photo-card h4{
+    margin-top:20px;
+    margin-bottom:5px;
+    font-weight:700;
+    color:#fff;
+}
+
+.student-photo-card p{
+    color:#d6b600;
+    margin-bottom:15px;
+}
+
+.student-id{
+    display:inline-block;
+    padding:8px 18px;
+    border-radius:30px;
+    background:#c59615;
+    color:#fff;
+    font-size:13px;
+}
+
+.profile-info{
+    background:#e9e6e3;
+    border:1px solid #e4d7fa;
+    border-radius:14px;
+    padding:14px 18px;
+    height:100%;
+    transition:.3s;
+}
+
+.profile-info:hover{
+    transform:translateY(-3px);
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+}
+
+.profile-info small{
+    display:block;
+    color:#000000;
+    font-size:12px;
+    margin-bottom:4px;
+}
+
+.profile-info h6{
+    margin:0;
+    font-weight:600;
+    font-size:15px;
+}
+
+.profile-image-wrapper{
+    position:relative;
+    display:inline-block;
+}
+
+.profile-photo{
+    width:170px;
+    height:170px;
+    border-radius:50%;
+    object-fit:cover;
+    border:5px solid #fff;
+    box-shadow:0 12px 25px rgba(0,0,0,.15);
+}
+
+.upload-photo-btn{
+    position:absolute;
+    right:8px;
+    bottom:8px;
+    width:42px;
+    height:42px;
+    border-radius:50%;
+    background:#2563eb;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.upload-photo-btn:hover{
+    transform:scale(1.1);
+    background:#1d4ed8;
+}
+
+@media(max-width:991px){
+
+    .student-photo-card{
+        margin-bottom:20px;
+    }
+
+    .profile-photo{
+        width:140px;
+        height:140px;
+    }
+
+}

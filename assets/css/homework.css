@@ -1,0 +1,128 @@
+.card-body{
+    padding: 1.5rem;
+}
+
+.border.rounded-3{
+    transition: .3s ease;
+    background: #fff;
+}
+
+.border.rounded-3:hover{
+    box-shadow: 0 8px 20px rgba(0,0,0,.08);
+}
+
+.table td,
+.table th{
+    vertical-align: middle;
+}
+
+.form-control,
+.form-select{
+    border-radius: 10px;
+}
+
+.btn{
+    border-radius: 10px;
+}
+
+.homework-panel {
+    border: 0;
+}
+
+.homework-header {
+    background: linear-gradient(135deg, #f8fbff 0%, #eef4ff 100%);
+}
+
+.homework-header small {
+    color: #64748b;
+}
+
+.homework-list {
+    display: grid;
+    gap: 14px;
+}
+
+.homework-assignment {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    border: 1px solid #dbeafe;
+    border-radius: 16px;
+    background: #f8fbff;
+}
+
+.homework-assignment h6 {
+    margin: 5px 0 3px;
+    font-weight: 700;
+}
+
+.homework-subject {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-size: 0.78rem;
+    font-weight: 700;
+}
+
+.homework-subject.science {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.homework-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 8px;
+    color: #475569;
+    font-size: 0.86rem;
+    white-space: nowrap;
+}
+
+.homework-submit-form {
+    padding: 18px;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    background: #ffffff;
+}
+
+@media (max-width:768px){
+
+    .card-body{
+        padding:1rem;
+    }
+
+    .table{
+        font-size:.9rem;
+    }
+
+    .btn{
+        width:100%;
+    }
+
+    .homework-header {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .homework-assignment {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .homework-meta {
+        align-items: flex-start;
+        white-space: normal;
+    }
+
+    .text-end{
+        text-align:left !important;
+        margin-top:.5rem;
+    }
+
+}
